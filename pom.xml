@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>com.example</groupId>
+    <artifactId>flink-pravega-demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>demo</name>
+    <description>Demo project for Spring Boot</description>
+    <properties>
+        <pravegaVersion>0.9.0</pravegaVersion>
+        <pravegaKeycloakVersion>0.9.0</pravegaKeycloakVersion>
+        <samplesVersion>0.9.0</samplesVersion>
+        <flinkConnectorVersion>0.9.0</flinkConnectorVersion>
+        <flinkVersion>1.11.2</flinkVersion>
+        <flinkMajorMinorVersion>1.11</flinkMajorMinorVersion>
+        <flinkScalaVersion>2.12</flinkScalaVersion>
+        <hadoopConnectorVersion>0.9.0</hadoopConnectorVersion>
+        <schemaRegistryVersion>0.2.0</schemaRegistryVersion>
+        <commonsCliVersion>1.4</commonsCliVersion>
+        <scalaVersion>2.11.8</scalaVersion>
+        <sparkVersion>2.4.6</sparkVersion>
+        <sparkConnectorVersion>0.9.0</sparkConnectorVersion>
+        <hadoopVersion>2.8.1</hadoopVersion>
+        <kryoSerializerVersion>0.45</kryoSerializerVersion>
+        <scalaJava8CompatVersion>0.9.0</scalaJava8CompatVersion>
+        <slf4jLog4JVersion>1.7.25</slf4jLog4JVersion>
+        <lombokVersion>1.18.4</lombokVersion>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>de.javakaffee</groupId>
+            <artifactId>kryo-serializers</artifactId>
+            <version>${kryoSerializerVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.pravega</groupId>
+            <artifactId>pravega-keycloak-client</artifactId>
+            <version>${pravegaKeycloakVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-java8-compat_${flinkScalaVersion}</artifactId>
+            <version>${scalaJava8CompatVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.pravega</groupId>
+            <artifactId>pravega-connectors-flink-${flinkMajorMinorVersion}_${flinkScalaVersion}</artifactId>
+            <version>${flinkConnectorVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java_${flinkScalaVersion}</artifactId>
+            <version>${flinkVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-clients_${flinkScalaVersion}</artifactId>
+            <version>${flinkVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4jLog4JVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>1.18.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.78</version>
+        </dependency>
+       
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
