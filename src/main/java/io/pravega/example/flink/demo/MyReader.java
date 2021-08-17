@@ -1,17 +1,17 @@
 package io.pravega.example.flink.demo;
 
+import com.alibaba.fastjson.JSON;
 import io.pravega.client.stream.Stream;
-import io.pravega.client.stream.impl.JavaSerializer;
 import io.pravega.connectors.flink.FlinkPravegaReader;
 import io.pravega.connectors.flink.PravegaConfig;
 import io.pravega.connectors.flink.serialization.PravegaDeserializationSchema;
 import io.pravega.example.flink.Utils;
-import org.apache.flink.api.common.functions.FlatMapFunction;
+import io.pravega.example.flink.demo.baidu.Check;
+import org.apache.commons.io.IOUtils;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,8 +47,9 @@ public class MyReader {
 
         // initialize the Flink execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        
         DeserializationSchema<ImageData> deserializationSchema = new PravegaDeserializationSchema<>(
-                ImageData.class, new JavaSerializer<ImageData>());
+                ImageData.class, new ImageDataSerializer());
         
         
         // create the Pravega source to read a stream of text
@@ -63,10 +64,13 @@ public class MyReader {
                 
         DataStream<String> bb = dataStream.map(image -> {
             InputStream inputStream = new ByteArrayInputStream(image.getData());
+            String checkResult = Check.getAIResult(IOUtils.toByteArray(inputStream));
+            System.out.println("checkResult = " + checkResult);
+            System.out.println("image = " + image.getUrl());
             BufferedImage bufferedImage = ImageIO.read(inputStream);
-            String msg = String.format("annnn: %s; dd : %s", image.getImageType(), bufferedImage.toString());
-            System.out.println(msg);
-            return msg;
+//            String msg = String.format("annnn: %s; dd : %s", image.getImageType(), bufferedImage.toString());
+//            System.out.println(msg);
+            return checkResult;
         }).name("annaOutput");
         
         
@@ -79,24 +83,5 @@ public class MyReader {
 
         LOG.info("Ending MyReader...");
     }
-
-    // split data into word by space
-//    private static class Splitter implements FlatMapFunction<String, WordCount> {
-//
-//        public void flatMap(String data, Collector<WordCount> out) throws Exception {
-//            out.collect(new WordCount(data, 1));
-//
-////            System.out.println("data.getImageType() = " + data.getImageType());
-//        }
-//    }
-
-    // split data into word by space
-    private static class Splitter implements FlatMapFunction<ImageData, ImageData> {
-
-        public void flatMap(ImageData data, Collector<ImageData> out) throws Exception {
-            out.collect(data);
-
-//            System.out.println("data.getImageType() = " + data.getImageType());
-        }
-    }
+    
 }

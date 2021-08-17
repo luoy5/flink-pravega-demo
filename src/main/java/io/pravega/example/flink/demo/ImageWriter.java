@@ -77,16 +77,11 @@ public class ImageWriter {
             ImageData data = new ImageData();
             data.setImageType("jpg");
             data.setDriverId("11");
+            data.setUrl(file1.getAbsolutePath());
             data.setTimestamp(new Date().getTime());
             data.setData(FileUtils.readFileToByteArray(file1));
             writer.run(data.getDriverId(), data);
             Thread.sleep(100);
         }
-//        
-//        String [] aa = {"a","b","c"};
-//        for (String a : aa){
-//            writer.run("11", a);
-//            Thread.sleep(3000);
-//        }
     }
 }
