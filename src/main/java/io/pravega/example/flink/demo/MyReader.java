@@ -7,17 +7,22 @@ import io.pravega.connectors.flink.PravegaConfig;
 import io.pravega.connectors.flink.serialization.PravegaDeserializationSchema;
 import io.pravega.example.flink.Utils;
 import io.pravega.example.flink.demo.baidu.Check;
+import io.pravega.example.flink.demo.sink.FileSink;
 import org.apache.commons.io.IOUtils;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 
 public class MyReader {
@@ -38,12 +43,12 @@ public class MyReader {
         ParameterTool params = ParameterTool.fromArgs(args);
         PravegaConfig pravegaConfig = PravegaConfig
                 .fromParams(params)
-                .withDefaultScope("hello");
+                .withDefaultScope(Constants.DEFAULT_SCOPE);
 
         // create the Pravega input stream (if necessary)
         Stream stream = Utils.createStream(
                 pravegaConfig,
-                params.get(Constants.STREAM_PARAM, "anna2"));
+                params.get(Constants.STREAM_PARAM, Constants.DEFAULT_STREAM));
 
         // initialize the Flink execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -52,31 +57,31 @@ public class MyReader {
                 ImageData.class, new ImageDataSerializer());
         
         
-        // create the Pravega source to read a stream of text
+        // create the Pravega source to read a stream of ImageData
         FlinkPravegaReader<ImageData> source = FlinkPravegaReader.<ImageData>builder()
                 .withPravegaConfig(pravegaConfig)
                 .forStream(stream)
                 .withDeserializationSchema(deserializationSchema)
                 .build();
         
-        // count each word over a 10 second time period
         DataStream<ImageData> dataStream = env.addSource(source).name("Pravega Stream");
-                
-        DataStream<String> bb = dataStream.map(image -> {
+
+        DataStream<OutCSV> bb = dataStream.map(image -> {
+            OutCSV csvInfo = new OutCSV();
             InputStream inputStream = new ByteArrayInputStream(image.getData());
             String checkResult = Check.getAIResult(IOUtils.toByteArray(inputStream));
             System.out.println("checkResult = " + checkResult);
             System.out.println("image = " + image.getUrl());
-            BufferedImage bufferedImage = ImageIO.read(inputStream);
-//            String msg = String.format("annnn: %s; dd : %s", image.getImageType(), bufferedImage.toString());
-//            System.out.println(msg);
-            return checkResult;
+            csvInfo.setDriverId(image.getDriverId());
+            csvInfo.setImageUrl(image.getUrl());
+            csvInfo.setCheckResult(checkResult);
+            return csvInfo;
         }).name("annaOutput");
-        
-        
-        // create an output sink to print to stdout for verification
-        bb.print();
-        bb.printToErr();
+
+//        bb.print();
+//        bb.printToErr();
+
+        bb.addSink(new FileSink());
 
         // execute within the Flink environment
         env.execute("MyReader");

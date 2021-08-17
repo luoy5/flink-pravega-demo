@@ -43,16 +43,8 @@ public class AuthService {
      * "24.460da4889caad24cccdb1fea17221975.2592000.1491995545.282335-1234567"
      */
     public static String getAuth(String ak, String sk) {
-        // 获取token地址
-        String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
-        String getAccessTokenUrl = authHost
-                // 1. grant_type为固定参数
-                + "grant_type=client_credentials"
-                // 2. 官网获取的 API Key
-                + "&client_id=" + ak
-                // 3. 官网获取的 Secret Key
-                + "&client_secret=" + sk;
-        getAccessTokenUrl = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=Dk5Mz62F3ERvN5GQoHGPc2eh&client_secret=y8434Dya4rYkyGexrcZBXnxYSC5WCwvK";
+        // 获取token
+        String getAccessTokenUrl = String.format("https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s", ak, sk);
         try {
 
             TrustManager[] trustAllCerts = new TrustManager[]{
@@ -95,10 +87,7 @@ public class AuthService {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
-            /**
-             * 返回结果示例
-             */
-//            System.err.println("result:" + result);
+
             JSONObject jsonObject = JSON.parseObject(result);
             String access_token = jsonObject.getString("access_token");
             return access_token;
