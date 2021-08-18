@@ -56,18 +56,34 @@ public class MyWriter {
     public static void main(String[] args) throws IOException, InterruptedException {
         MyWriter writer = new MyWriter(Constants.DEFAULT_SCOPE, Constants.DEFAULT_STREAM, URI.create(Constants.DEFAULT_CONTROLLER_URI));
         //String dirPath = "C:\\Flink\\flink-pravega-demo\\images";
-        String dirPath = "/root/flink-pravega-demo/images";
-        File file = new File(dirPath);
-        File[] tempList = file.listFiles();
-        for (File file1 : tempList) {
-            ImageData data = new ImageData();
-            data.setImageType("jpg");
-            data.setDriverId("11");
-            data.setUrl(file1.getAbsolutePath());
-            data.setTimestamp(new Date().getTime());
-            data.setData(FileUtils.readFileToByteArray(file1));
-            writer.run(data.getDriverId(), data);
+        String dirPath1 = "/root/driver1";
+        String dirPath2 = "/root/driver2";
+        File file1 = new File(dirPath1);
+        File file2 = new File(dirPath2);
+        File[] tempList1 = file1.listFiles();
+        File[] tempList2 = file2.listFiles();
+
+        for (int i = 0; i < tempList1.length ; i++){
+            File fileEle1 = tempList1[i];
+            File fileEle2 = tempList2[i];
+
+            ImageData data1 = new ImageData();
+            data1.setImageType("jpg");
+            data1.setDriverId("driver1");
+            data1.setUrl(fileEle1.getAbsolutePath());
+            data1.setTimestamp(new Date().getTime());
+            data1.setData(FileUtils.readFileToByteArray(fileEle1));
+            writer.run(data1.getDriverId(), data1);
+
             Thread.sleep(100);
-        }
+
+            ImageData data2 = new ImageData();
+            data2.setImageType("jpg");
+            data2.setDriverId("driver2");
+            data2.setUrl(fileEle2.getAbsolutePath());
+            data2.setTimestamp(new Date().getTime());
+            data2.setData(FileUtils.readFileToByteArray(fileEle2));
+            writer.run(data2.getDriverId(), data2);
+	}
     }
 }
