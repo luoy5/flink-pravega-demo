@@ -25,6 +25,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 
+/**
+ * Create by Anna
+ * Date 2021-08-16
+ * A class for reading image from pravega
+ */
 public class MyReader {
     // Logger initialization
     private static final Logger LOG = LoggerFactory.getLogger(MyReader.class);

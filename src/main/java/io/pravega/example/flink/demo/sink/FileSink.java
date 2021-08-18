@@ -9,6 +9,11 @@ import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
 import java.io.*;
 
+/**
+ * Create by Anna
+ * Date 2021-08-17
+ * A class for outputing result to csv file
+ */
 public class FileSink extends RichSinkFunction<OutCSV> {
     private FileWriter fileWriter;
     private CSVWriter csvWriter;
@@ -16,7 +21,7 @@ public class FileSink extends RichSinkFunction<OutCSV> {
     @Override
     public void open(Configuration parameters) throws Exception {
         super.open(parameters);
-        fileWriter = new FileWriter("./out.csv", true);
+        fileWriter = new FileWriter("/root/flink-pravega-demo/out.csv", true);
         csvWriter = new CSVWriter(fileWriter);
         csvWriter.writeNext(new String[]{"driverId", "url", "result"});
     }

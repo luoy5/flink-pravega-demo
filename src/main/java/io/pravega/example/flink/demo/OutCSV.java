@@ -5,6 +5,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * Create by Anna
+ * Date 2021-08-18
  * A class for output CSV
  */
 @Data

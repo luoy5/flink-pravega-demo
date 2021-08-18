@@ -5,6 +5,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+ * Create by Anna
+ * Date 2021-08-16
  * A class for storing image
  */
 @Data

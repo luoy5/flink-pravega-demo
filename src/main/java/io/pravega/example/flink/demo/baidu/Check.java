@@ -2,6 +2,11 @@ package io.pravega.example.flink.demo.baidu;
 
 import java.net.URLEncoder;
 
+/**
+ * Create by Anna
+ * Date 2021-08-17
+ * A class for checking via baidu AI
+ */
 public class Check {
     public static String aiUrl = "https://aip.baidubce.com/rest/2.0/image-classify/v1/driver_behavior";
     

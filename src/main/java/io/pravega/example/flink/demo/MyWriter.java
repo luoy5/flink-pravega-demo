@@ -15,6 +15,12 @@ import java.net.URI;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Create by Anna
+ * Date 2021-08-16
+ * A class for writing image to pravega
+ */
+
 public class MyWriter {
     public String scope;
     public String streamName;
@@ -49,7 +55,8 @@ public class MyWriter {
     
     public static void main(String[] args) throws IOException, InterruptedException {
         MyWriter writer = new MyWriter(Constants.DEFAULT_SCOPE, Constants.DEFAULT_STREAM, URI.create(Constants.DEFAULT_CONTROLLER_URI));
-        String dirPath = "C:\\Flink\\flink-pravega-demo\\images";
+        //String dirPath = "C:\\Flink\\flink-pravega-demo\\images";
+        String dirPath = "/root/flink-pravega-demo/images";
         File file = new File(dirPath);
         File[] tempList = file.listFiles();
         for (File file1 : tempList) {
