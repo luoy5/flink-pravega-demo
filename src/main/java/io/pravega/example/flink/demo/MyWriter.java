@@ -25,14 +25,14 @@ public class MyWriter {
     public String scope;
     public String streamName;
     public URI controllerURI;
-    
-    public MyWriter(String scope, String streamName, URI controllerURI){
+
+    public MyWriter(String scope, String streamName, URI controllerURI) {
         this.scope = scope;
         this.streamName = streamName;
         this.controllerURI = controllerURI;
     }
-    
-    public void run(String routingKey, ImageData data){
+
+    public void run(String routingKey, ImageData data) {
         StreamManager streamManager = StreamManager.create(controllerURI);
         final boolean scopeIsNew = streamManager.createScope(scope);
         StreamConfiguration streamConfig = StreamConfiguration.builder()
@@ -40,7 +40,7 @@ public class MyWriter {
                 .build();
 
         final boolean streamIsNew = streamManager.createStream(scope, streamName, streamConfig);
-        
+
         try (EventStreamClientFactory clientFactory = EventStreamClientFactory.withScope(scope,
                 ClientConfig.builder().controllerURI(controllerURI).build());
              EventStreamWriter<ImageData> writer = clientFactory.createEventWriter(streamName,
@@ -52,7 +52,7 @@ public class MyWriter {
             final CompletableFuture writeFuture = writer.writeEvent(routingKey, data);
         }
     }
-    
+
     public static void main(String[] args) throws IOException, InterruptedException {
         MyWriter writer = new MyWriter(Constants.DEFAULT_SCOPE, Constants.DEFAULT_STREAM, URI.create(Constants.DEFAULT_CONTROLLER_URI));
         //String dirPath = "C:\\Flink\\flink-pravega-demo\\images";
@@ -63,7 +63,9 @@ public class MyWriter {
         File[] tempList1 = file1.listFiles();
         File[] tempList2 = file2.listFiles();
 
-        for (int i = 0; i < tempList1.length ; i++){
+        long startTime = System.currentTimeMillis();
+        System.out.println(String.format("Start write ############################################: %d", startTime));
+        for (int i = 0; i < tempList1.length; i++) {
             File fileEle1 = tempList1[i];
             File fileEle2 = tempList2[i];
 
@@ -75,8 +77,6 @@ public class MyWriter {
             data1.setData(FileUtils.readFileToByteArray(fileEle1));
             writer.run(data1.getDriverId(), data1);
 
-            Thread.sleep(100);
-
             ImageData data2 = new ImageData();
             data2.setImageType("jpg");
             data2.setDriverId("driver2");
@@ -84,6 +84,9 @@ public class MyWriter {
             data2.setTimestamp(new Date().getTime());
             data2.setData(FileUtils.readFileToByteArray(fileEle2));
             writer.run(data2.getDriverId(), data2);
-	}
+        }
+        System.out.println("End write ############################################ " + System.currentTimeMillis());
+        long avg = (System.currentTimeMillis() - startTime) / (tempList1.length * 2L);
+        System.out.println(String.format("Average latency ##########################: %d", avg));
     }
 }

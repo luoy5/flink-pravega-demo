@@ -64,11 +64,13 @@ public class MyReader {
                 .build();
         
         DataStream<ImageData> dataStream = env.addSource(source).name("Pravega Stream");
-
+        System.out.println(String.format("Start process imageData ################# : %d", System.currentTimeMillis()));
         DataStream<OutCSV> bb = dataStream.map(image -> {
             OutCSV csvInfo = new OutCSV();
             InputStream inputStream = new ByteArrayInputStream(image.getData());
+            System.out.println(String.format("Start baidu AI ################# : %d", System.currentTimeMillis()));
             String checkResult = Check.getAIResult(IOUtils.toByteArray(inputStream));
+            System.out.println(String.format("End baidu AI ################# : %d", System.currentTimeMillis()));
             System.out.println("checkResult = " + checkResult);
             System.out.println("image = " + image.getUrl());
             csvInfo.setDriverId(image.getDriverId());
@@ -77,6 +79,7 @@ public class MyReader {
             return csvInfo;
         }).name("annaOutput");
 
+        System.out.println(String.format("end process imageData ################# : %d", System.currentTimeMillis()));
 //        bb.print();
 //        bb.printToErr();
 
