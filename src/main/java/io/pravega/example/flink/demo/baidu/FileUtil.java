@@ -2,6 +2,10 @@ package io.pravega.example.flink.demo.baidu;
 
 import java.io.*;
 
+/**
+ * Create by Anna
+ * Date 2021-08-17
+ */
 public class FileUtil {
     
     public static String readFileAsString(String filePath) throws IOException {

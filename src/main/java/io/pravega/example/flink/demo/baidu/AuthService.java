@@ -15,7 +15,11 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-
+/**
+ * Create by Anna
+ * Date 2021-08-17
+ * A class for getting baidu AI token
+ */
 public class AuthService {
     /**
      * 获取权限token

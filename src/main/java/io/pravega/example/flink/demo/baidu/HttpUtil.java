@@ -8,6 +8,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Create by Anna
+ * Date 2021-08-17
+ */
 public class HttpUtil {
     public static String post(String requestUrl, String accessToken, String params)
             throws Exception {

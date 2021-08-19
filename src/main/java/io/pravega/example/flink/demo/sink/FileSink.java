@@ -23,7 +23,6 @@ public class FileSink extends RichSinkFunction<OutCSV> {
         super.open(parameters);
         fileWriter = new FileWriter("/root/flink-pravega-demo/out.csv", true);
         csvWriter = new CSVWriter(fileWriter);
-        csvWriter.writeNext(new String[]{"driverId", "url", "result"});
     }
 
     @Override
