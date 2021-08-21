@@ -21,7 +21,7 @@ public class FileSink extends RichSinkFunction<OutCSV> {
     @Override
     public void open(Configuration parameters) throws Exception {
         super.open(parameters);
-        fileWriter = new FileWriter("/root/flink-pravega-demo/out.csv", true);
+        fileWriter = new FileWriter("/home/yuhao/flink-pravega-demo/out.csv", true);
         csvWriter = new CSVWriter(fileWriter);
     }
 
@@ -33,9 +33,9 @@ public class FileSink extends RichSinkFunction<OutCSV> {
                 .map(i -> i.toString())
                 .toArray(i -> new String[i]);
 
-        System.out.println("writing:" + line);
+        //System.out.println("writing:" + line);
         csvWriter.writeNext(line);
-//        fileWriter.write("\n");
+        //fileWriter.write("\n");
         csvWriter.flush();
     }
 }

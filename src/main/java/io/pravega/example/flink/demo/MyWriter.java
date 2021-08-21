@@ -33,13 +33,6 @@ public class MyWriter {
     }
 
     public void run(String routingKey, ImageData data) {
-        StreamManager streamManager = StreamManager.create(controllerURI);
-        final boolean scopeIsNew = streamManager.createScope(scope);
-        StreamConfiguration streamConfig = StreamConfiguration.builder()
-                .scalingPolicy(ScalingPolicy.fixed(1))
-                .build();
-
-        final boolean streamIsNew = streamManager.createStream(scope, streamName, streamConfig);
 
         try (EventStreamClientFactory clientFactory = EventStreamClientFactory.withScope(scope,
                 ClientConfig.builder().controllerURI(controllerURI).build());
@@ -47,8 +40,8 @@ public class MyWriter {
                      new ImageDataSerializer(),
                      EventWriterConfig.builder().build())) {
 
-            System.out.format("Writing message: '%s' with routing-key: '%s' to stream '%s / %s'%n",
-                    data.toString(), routingKey, scope, streamName);
+            // System.out.format("Writing message: '%s' with routing-key: '%s' to stream '%s / %s'%n",
+            //         data.toString(), routingKey, scope, streamName);
             final CompletableFuture writeFuture = writer.writeEvent(routingKey, data);
         }
     }
@@ -56,12 +49,23 @@ public class MyWriter {
     public static void main(String[] args) throws IOException, InterruptedException {
         MyWriter writer = new MyWriter(Constants.DEFAULT_SCOPE, Constants.DEFAULT_STREAM, URI.create(Constants.DEFAULT_CONTROLLER_URI));
 
+        StreamManager streamManager = StreamManager.create(writer.controllerURI);
+        final boolean scopeIsNew = streamManager.createScope(writer.scope);
+        StreamConfiguration streamConfig = StreamConfiguration.builder()
+                .scalingPolicy(ScalingPolicy.fixed(1))
+                .build();
+
+        final boolean streamIsNew = streamManager.createStream(writer.scope, writer.streamName, streamConfig);
+
         String dirPath1 = "/root/flink-pravega-demo/images/driver1";
         String dirPath2 = "/root/flink-pravega-demo/images/driver2";
         File file1 = new File(dirPath1);
         File file2 = new File(dirPath2);
         File[] tempList1 = file1.listFiles();
         File[] tempList2 = file2.listFiles();
+
+        long startTime = System.currentTimeMillis();
+        System.out.println(String.format("Start write #################: %d", startTime));
 
         for (int i = 0; i < tempList1.length; i++) {
             File fileEle1 = tempList1[i];
@@ -83,5 +87,9 @@ public class MyWriter {
             data2.setData(FileUtils.readFileToByteArray(fileEle2));
             writer.run(data2.getDriverId(), data2);
         }
+
+        System.out.println("End write #################: " + System.currentTimeMillis());
+        //long avg = (System.currentTimeMillis() - startTime) / (tempList1.length * 2L);
+        //System.out.println(String.format("Average latency #################: %d", avg));
     }
 }
