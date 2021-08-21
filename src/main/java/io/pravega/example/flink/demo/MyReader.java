@@ -51,18 +51,17 @@ public class MyReader {
 
         // initialize the Flink execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        
+
         DeserializationSchema<ImageData> deserializationSchema = new PravegaDeserializationSchema<>(
                 ImageData.class, new ImageDataSerializer());
-        
-        
+
         // create the Pravega source to read a stream of ImageData
         FlinkPravegaReader<ImageData> source = FlinkPravegaReader.<ImageData>builder()
                 .withPravegaConfig(pravegaConfig)
                 .forStream(stream)
                 .withDeserializationSchema(deserializationSchema)
                 .build();
-        
+
         DataStream<ImageData> dataStream = env.addSource(source).name("Pravega Stream");
         DataStream<OutCSV> bb = dataStream.map(image -> {
             OutCSV csvInfo = new OutCSV();
@@ -84,5 +83,5 @@ public class MyReader {
 
         LOG.info("Ending MyReader...");
     }
-    
+
 }

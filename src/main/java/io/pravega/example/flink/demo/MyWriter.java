@@ -55,7 +55,7 @@ public class MyWriter {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         MyWriter writer = new MyWriter(Constants.DEFAULT_SCOPE, Constants.DEFAULT_STREAM, URI.create(Constants.DEFAULT_CONTROLLER_URI));
-        //String dirPath = "C:\\Flink\\flink-pravega-demo\\images";
+
         String dirPath1 = "/root/flink-pravega-demo/images/driver1";
         String dirPath2 = "/root/flink-pravega-demo/images/driver2";
         File file1 = new File(dirPath1);
