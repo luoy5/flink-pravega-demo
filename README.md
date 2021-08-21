@@ -51,6 +51,11 @@ dependency-reduced-pom.xml  images  jupyter  out.csv  pom.xml  reader.sh  src  s
 - images 目录下存放驾驶员的源图片
 - out.csv 用于记录驾驶员行为识别的结果
 
+如果是其他路径，需要修改如下地方：
+MyWriter.java 中dirPath1，dirPath2为新的绝对路径
+FileSink.java 中out.csv的新的绝对路径
+demo.ipynb 中path为新的out.csv 绝对路径
+
 使用百度API，需要提供clineId 和 clientSecret，填写到src/main/java/io/pravega/example/flink/demo/baidu/AuthService.java中
 ![zone](./resource/app.jpg)
 
