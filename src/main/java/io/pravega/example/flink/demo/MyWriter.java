@@ -63,8 +63,6 @@ public class MyWriter {
         File[] tempList1 = file1.listFiles();
         File[] tempList2 = file2.listFiles();
 
-        long startTime = System.currentTimeMillis();
-        System.out.println(String.format("Start write ############################################: %d", startTime));
         for (int i = 0; i < tempList1.length; i++) {
             File fileEle1 = tempList1[i];
             File fileEle2 = tempList2[i];
@@ -85,8 +83,5 @@ public class MyWriter {
             data2.setData(FileUtils.readFileToByteArray(fileEle2));
             writer.run(data2.getDriverId(), data2);
         }
-        System.out.println("End write ############################################ " + System.currentTimeMillis());
-        long avg = (System.currentTimeMillis() - startTime) / (tempList1.length * 2L);
-        System.out.println(String.format("Average latency ##########################: %d", avg));
     }
 }
